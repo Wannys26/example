@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -10,9 +11,19 @@ export default function TodosCrudPage() {
     const fetchTodos = async () => {
       try {
         // get
+        const res = await axios.get('https://jsonplaceholder.typicode.com/todos',
+          {
+            params: {
+              _limit: 5, // 예시로 10개만 가져오기
+            },
+          }
+        );
+        setTodos(res.data);
+        console.log(res.data);
       } catch (error) {
         console.error('GET 요청 실패:', error);
       }
+      
     };
 
     fetchTodos();
@@ -22,24 +33,39 @@ export default function TodosCrudPage() {
   const handleAdd = async () => {
     try {
       // post
+      const res = await axios.post('https://jsonplaceholder.typicode.com/todos',
+        {
+          title,
+          completed: false,
+        }
+      );
+      console.log(res.data);
     } catch (error) {
       console.error('POST 요청 실패:', error);
     }
   };
 
   // PATCH
-  const handleToggle = async () => {
+  const handleToggle = async (id) => {
     try {
       // patch
+      const res = await axios.patch(`https://jsonplaceholder.typicode.com/todos/${id}`,
+        {
+          completed: true, // 완료 상태로 변경
+        }
+      )
+      console.log('Patch 성공:', res.data);
     } catch (error) {
       console.error('PATCH 요청 실패:', error);
     }
   };
 
   // DELETE
-  const handleDelete = async () => {
+  const handleDelete = async (id) => {
     try {
       // delete
+      const res = await axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`);
+      console.log('Delete 성공:', res.data);
     } catch (error) {
       console.error('DELETE 요청 실패:', error);
     }
